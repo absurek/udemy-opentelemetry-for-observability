@@ -16,6 +16,9 @@
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway"
+  ],
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
