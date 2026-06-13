@@ -3,12 +3,12 @@ services:
     image: prom/prometheus:v3.9.1
     container_name: prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--config.file=/etc/prometheus/prometheus-config.yaml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=15d'
     volumes:
       # TODO(absurek): Hotfix for DooD DevContainer relative paths
-      - /home/sureka/github.com/absurek/udemy-opentelemetry-for-observability/compose/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - /home/sureka/github.com/absurek/udemy-opentelemetry-for-observability/compose/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml:ro
       - prometheus-data:/prometheus
     ports:
       - '9090:9090'
@@ -34,7 +34,24 @@ services:
       - observability
     restart: unless-stopped
 
+  tempo:
+    image: grafana/tempo:2.10.1
+    container_name: tempo
+    command:
+      - '-config.file=/etc/tempo/tempo-config.yaml'
+      - '-target=all'
+    volumes:
+      # TODO(absurek): Hotfix for DooD DevContainer relative paths
+      - /home/sureka/github.com/absurek/udemy-opentelemetry-for-observability/compose/tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
+      - tempo-data:/var/tempo
+    ports:
+      - '3200:3200'
+    networks:
+      - observability
+    restart: unless-stopped
+
 volumes:
   prometheus-data:
   loki-data:
   loki-wal:
+  tempo-data:
